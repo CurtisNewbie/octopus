@@ -103,7 +103,7 @@ octopus doesn't understand the true meaning of the decision values, octopus simp
 
 ```json
 {
-    "APPROVE": {
+    "APPROVED": {
         "name" : "Approved",
         "desc" : "Subject has not associated risk"
     },
@@ -120,14 +120,40 @@ octopus doesn't understand the true meaning of the decision values, octopus simp
 
 ## Rules
 
-A Rule consists of metrics (0..N), expressions and decisions.
+A Rule is a combination of data descriptor, metrics, expressions and decisions. Rule can express various logics, e.g., *'Identify trading orders that are delivered to Sheffield'*. Take this as an example, octopus will feed the data to the execution engine as the context.
 
-TODO
+The trading order may look like the following:
 
-<!--
-## API
+```json
+{
+    "orderNo": "...",
+    "shippingCity": "...",
+    "shippingProvince": "...",
+    "customerName" : "..."
+}
+```
 
-TODO
+In octopus, we may setup a data descriptor as follows:
 
- -->
+```json
+{
+    "orderNo": {
+        "identifier" : "order_no",
+        "name" : "Trading Order No",
+        "desc" : "Unique identifier of an order"
+    },
+    "shippingCity": {
+        "identifier" : "shipping_city",
+        "name" : "Shipping City Name",
+        "desc" : "Name of the city the order is being shipped to"
+    }
+}
+```
 
+With the data descriptor, octopus automatically maps the fields to global variables. Then users writes expressions to read these variables, that are later executed by Octopus using an embeded VM as the rules ran. The expression may look like the following:
+
+```lua
+return shippingCity == 'Sheffield'
+```
+
+Based on the above expression, users will need to define appropriate decisions, e.g, if the orders are delivered to 'Sheffield', we returns `APPROVED` as the response, or else, we respond `REVIEW_REQUIRED`. That's it.
