@@ -79,23 +79,23 @@ Libraries:
 
 It seems likes yuin/gopher-lua is actually more performant, but shopify/go-lua is more compatible with lua5.2.
 
-## Data Point
+## Matrics
 
-Data Point is the result of transformation and aggregation of data. In octopus, various data points are maintained as data flows in and out. Rules are defined using data points. With the data points, one may describe the logic using various expressions. A single rule may use multiple data points as well, it's rather flexible.
+In octopus, various matrics are maintained as data flows in and out. Rules are defined using matrics. With the existing matrics, one may describe the logic using various expressions. A single rule may combine multiple matrics as well, it's rather flexible.
 
-<img src="./doc/octopus_datapoint.png" height="400px"/>
+<img src="./doc/octopus_matrics.png" height="400px"/>
 
-A data point has an unique identifier, an associated data type, some extra parameters, and finally a function that does all the transformation and aggregation. For example, a data point can be *'the number of times each user signed-in in recent 7 days'*.
+A matric has an unique identifier, an associated data type, some extra parameters, and finally a function that does all the transformation and aggregation. For example, a matric can be *'the number of times each user signed-in in recent 7 days'*.
 
-Such a data point will maintain a sliding window in time, there will be some extra parameters, e.g., for the time range of the sliding window. Since we are calculating number of times each user logged in, the data type will simply be an integer. Finally, the function that does all the works will need to recognizes which user the data belongs, and does the aggregation, which basically is `'login_times += 1'`.
+Such a matric will maintain a sliding window in time, there will be some extra parameters, e.g., for the time range of the sliding window. Since we are calculating number of times each user logged in, the data type will simply be an integer. Finally, the function that does all the works will need to recognizes which user the data belongs, and does the aggregation, which basically is `'login_times += 1'`.
 
-Data point is quite a powerful concept, but it also comes with a problem as well. As you may notice, in the example above, for each user, octopus will need to maintain a separate aggregation of data of the 7 days window. If there are N users in total, octopus will need to maintain literaily N data point records for all these users.
+Matrics is quite a powerful concept, but it also comes with a problem as well. As you may notice, in the example above, for each user, octopus will need to maintain a separate aggregation of data of the 7 days window. If there are N users in total, octopus will need to maintain literaily N matric records for all these users.
 
-<img src="./doc/octopus_datapoint_maintain.png" height="400px"/>
+<img src="./doc/octopus_matrics_maintain.png" height="400px"/>
 
 ## Decisions
 
-Decisions can be considered as the result of rules. octopus reacts to requests, maintains data points, makes decisions and returns results. Decisions are simply enum values, octopus expects users to pre-define the set of enum values to be used in rules.
+Decisions can be considered as the result of rules. octopus reacts to requests, maintains matrics, makes decisions and returns results. Decisions are simply enum values, octopus expects users to pre-define the set of enum values to be used in rules.
 
 Every rule specifies when certain conditions are met, which and what results should be returned. In risk management, the decisions may well just be `"Approved"`, `"Rejected"`, `"Review Required"` or something similar.
 
@@ -120,7 +120,7 @@ octopus doesn't understand the true meaning of the decision values, octopus simp
 
 ## Rules
 
-A Rule consists of data points (0..N), expressions, and decisions.
+A Rule consists of metrics (0..N), expressions and decisions.
 
 TODO
 
