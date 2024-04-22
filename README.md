@@ -21,9 +21,9 @@ Each rule is executed based on a context. In most cases, the context is the inbo
 
 In octopus, rules are defined to react to inbound requests and to produce reasonable responses. Inbound requests are all in application/json format, so basically, just a bunch of json objects. The extra data fed into octopus is also just a bunch of json objects.
 
-However, there is a limitation. The json object should be flat and simple. In other words, there should only be one layer, fields shouldn't also be an object. If the original data doesn't satisfy the requirements, you may will just do some transformations. The reason behind this limitation is that the data descriptor only handles simple type fields. The descriptor simpily cannot handle fields of some nested object.
+However, there is a requirement. The json object should be flat and simple. In other words, there should only be one layer, fields shouldn't also be an object. If the original data doesn't satisfy the requirement, you may will just do some transformations. The reason behind this, is that the data descriptor is designed to only handle simple type fields. The descriptor simpily doesn't handle fields of some nested object. This simplifies the design of the descriptor.
 
-If the nested object fields are not actually used by octopus, i.e., not defined in any data descriptor or rule, octopus will simply ignore these fields, so transformation is not necessary as well.
+If the nested object fields are not actually used by octopus, i.e., not defined in any data descriptor or rule, octopus will simply ignore these fields, then transformation is not needed.
 
 The following format is expected:
 
@@ -34,7 +34,7 @@ The following format is expected:
 }
 ```
 
-But this one is not:
+This one is not, but still, it depends on how you use the data in octopus:
 
 ```json
 {
@@ -51,8 +51,16 @@ octopus depends on a data descriptor to understand the data provided by the exte
 
 ```json
 {
-    "userId": { "identifier" : "user_id", "name" : "User Id" , "desc" : "User identifier of the whole system" },
-    "orderNo": { "identifier" : "order_no", "name" : "Order No", "desc" : "Order no of the forward transaction" }
+    "userId": {
+        "identifier" : "user_id",
+        "name" : "User Id",
+        "desc" : "User identifier of the whole system"
+    },
+    "orderNo": {
+        "identifier" : "order_no",
+        "name" : "Order No",
+        "desc" : "Order no of the forward transaction"
+    }
 }
 ```
 
