@@ -150,10 +150,20 @@ In octopus, we may setup a data descriptor as follows:
 }
 ```
 
-With the data descriptor, octopus automatically maps the fields to global variables. Then users writes expressions to read these variables, that are later executed by Octopus using an embeded VM as the rules ran. The expression may look like the following:
+With the data descriptor, octopus automatically maps the fields to global variables. Then users writes expressions to read these variables, that are later executed by octopus using an embeded VM as the rules ran. The expression may look like the following:
 
 ```lua
 return shippingCity == 'Sheffield'
 ```
 
-Based on the above expression, users will need to define appropriate decisions, e.g, if the orders are delivered to 'Sheffield', we returns `APPROVED` as the response, or else, we respond `REVIEW_REQUIRED`. That's it.
+Based on the above expression, users will need to define appropriate decisions, e.g, if the orders are delivered to 'Sheffield', we returns `APPROVED` as the response, or else, we respond `REVIEW_REQUIRED`. This example is relatively simple.
+
+Sometimes we need to define complex rules based on the historical data; Users may create all sorts of metrics and write expressions that utilize the matrics during rule execution. For example, imagine that we have maintained a metric: *'the number of times each user signed-in in recent 7 days'*, we may define rule to reject any transaction if the number of times the current user signed-in in recent 7 days is less then 1.
+
+The expression may look like the following, which indicates that the transaction should be rejected, then we may return decision value: `APPROVED`, the idea is still the same.
+
+```lua
+return metricSignInTimeInWindow < 1
+```
+
+Same as before, we write decisions result for each conditions, then that's it.
